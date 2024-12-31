@@ -1,3 +1,11 @@
-run = "uvicorn agent:app --host 0.0.0.0 --port 8080"
+run = "pip install -r requirements.txt && uvicorn agent:app --host 0.0.0.0 --port 8080"
 language = "python3"
-entrypoint = "agent.py" 
+entrypoint = "agent.py"
+modules = ["python-3.9:v18-20230807-322e88b"]
+
+[nix]
+channel = "stable-23_05"
+
+[deployment]
+run = ["sh", "-c", "uvicorn agent:app --host 0.0.0.0 --port 8080"]
+deploymentTarget = "cloudrun" 
