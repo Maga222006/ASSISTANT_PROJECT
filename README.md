@@ -4,7 +4,7 @@ A powerful AI assistant project designed to help users with various tasks.
 
 ## Description
 
-This project implements an AI-powered assistant capable of handling various user requests and tasks efficiently.
+This project implements an AI-powered assistant capable of handling various user requests and tasks efficiently, with support for parallel task execution.
 
 ## Features
 
@@ -12,6 +12,9 @@ This project implements an AI-powered assistant capable of handling various user
 - Task automation
 - Natural language processing
 - Interactive communication
+- Multi-threaded task execution
+- Parallel tool processing for improved performance
+- Concurrent request handling
 
 ## Getting Started
 
@@ -39,7 +42,18 @@ pip install -r requirements.txt
 
 ## Usage
 
-[Add usage instructions here]
+The assistant supports parallel execution of tasks using multiple threads:
+
+```python
+# Example of parallel tool execution
+assistant.run_tools_parallel([
+    "tool1",
+    "tool2",
+    "tool3"
+])
+```
+
+This allows for efficient processing of multiple tasks simultaneously, significantly reducing execution time for complex operations.
 
 ## Contributing
 
