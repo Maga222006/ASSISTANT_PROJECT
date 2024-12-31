@@ -30,3 +30,8 @@ huggingface-hub
 fsspec
 typing-extensions
 tqdm 
+fastapi
+uvicorn
+python-dotenv
+pydantic
+requests 
