@@ -55,6 +55,58 @@ assistant.run_tools_parallel([
 
 This allows for efficient processing of multiple tasks simultaneously, significantly reducing execution time for complex operations.
 
+## Deployment
+
+### Local Deployment
+```bash
+# Run the assistant locally
+python main.py
+```
+
+### Docker Deployment
+```bash
+# Build the Docker image
+docker build -t assistant-project .
+
+# Run the container
+docker run -d -p 8000:8000 assistant-project
+```
+
+### Cloud Deployment Options
+
+1. **Heroku**
+```bash
+# Login to Heroku
+heroku login
+
+# Create a new Heroku app
+heroku create assistant-project
+
+# Push to Heroku
+git push heroku main
+```
+
+2. **AWS Elastic Beanstalk**
+- Create an Elastic Beanstalk application
+- Configure Python environment
+- Deploy using AWS Console or EB CLI:
+```bash
+eb init
+eb create
+eb deploy
+```
+
+3. **Google Cloud Platform**
+```bash
+# Deploy to Google App Engine
+gcloud app deploy
+```
+
+Remember to set up environment variables for each deployment platform:
+- `API_KEY`: Your API key for the assistant
+- `PORT`: Port number (default: 8000)
+- `ENV`: Environment (production/development)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
