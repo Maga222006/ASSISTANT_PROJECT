@@ -15,7 +15,7 @@ load_dotenv()
 
 class Agent:
     def __init__(self):
-        self.links=[]
+        self.link=''
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
         self.schemas = [tool.schema for tool in self.uploaded_tools.values()]

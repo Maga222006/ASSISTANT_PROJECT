@@ -59,8 +59,8 @@ This allows for efficient processing of multiple tasks simultaneously, significa
 
 ### Local Deployment
 ```bash
-# Run the assistant locally
-python main.py
+# Run the assistant locally with hot reload
+uvicorn agent:app --reload
 ```
 
 ### Docker Deployment
