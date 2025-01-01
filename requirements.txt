@@ -1,5 +1,4 @@
 langchain
-semantic-router[local]
 openai
 transformers
 geopy
