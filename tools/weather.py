@@ -3,7 +3,6 @@ import requests
 import os
 import logging
 from geopy.geocoders import Nominatim
-from semantic_router import Route
 from model import Generator
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,28 +24,13 @@ class Tool:
 
         if not self.api_key:
             logging.warning("OpenWeatherMap API key not found")
-
-        self.route = Route(
-            name="weather",
-            utterances=[
-                "what will the weather be like",
-                "tell me what is the weather like today",
-                "what is the weather in",
-                "weather",
-                "what weather is it",
-                "is it gonna rain tomorrow",
-                "what is the weather like today",
-                "is it sunny in",
-                "weather forecast"
-            ]
-        )
-
         self.schema = {
             'type': 'function',
             'function': {
                 'name': 'weather',
                 'description': 'Get the weather forecast for the week or several days'
-                               'Use it to search weather forecast for the location, city, place, etc',
+                               'Use it to search weather forecast for the location, city, place, etc'
+                               'Use every time user asks about current weather or forecast regardless how many times.',
                 'parameters': {
                     'type': 'object',
                     'properties': {

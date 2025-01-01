@@ -6,8 +6,6 @@ from typing import Dict, Any
 from model import Generator
 import json
 import importlib
-from semantic_router import HybridRouteLayer
-from semantic_router.encoders import HuggingFaceEncoder, TfidfEncoder
 import threading
 import logging
 load_dotenv()
@@ -15,16 +13,9 @@ load_dotenv()
 
 class Agent:
     def __init__(self):
-        self.link=''
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
-        self.schemas = [tool.schema for tool in self.uploaded_tools.values()]
-        self.routes = [tool.route for tool in self.uploaded_tools.values()]
-        self.router = HybridRouteLayer(
-            encoder=HuggingFaceEncoder(),
-            sparse_encoder=TfidfEncoder(),
-            routes=self.routes
-        )
+        self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
 
     def load_tools(self):
         """Dynamically load skill modules from the 'tools' directory."""
@@ -41,29 +32,20 @@ class Agent:
                         logging.error(f"Error loading skill '{module_name}': {e}")
         return skills
 
-    def get_toolbox(self, query):
-        """Use the router to pick relevant tools for the query."""
-        routes = self.router._query(query, 6)
-        if routes:
-            route_set = set([route['route'] for route in routes])
-            route_set.add('web_search')  # fallback
-            return [schema for schema in self.schemas if schema['function']['name'] in route_set]
-        return [schema for schema in self.schemas if schema['function']['name'] == 'web_search']
-
     def call_agent(self, messages):
         tool_responses = []
-        toolbox = self.get_toolbox(messages[-1]['content'])
         system_message = {
             'role': 'system',
             'content': (
                 f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''}"
                 f'Your job is to give the response to the user query using tools.'
-                f'When you need up-to-date information (weather forecast, current time, famous people, web search), call the tools.'
+                f'EVERY TIME you need up-to-date information (weather forecast, current time, famous people, web search), call the tools.'
+                f"Tools available: {(tool['function']['name'] for tool in self.toolbox)}"
                 f'Call tools AS OFTEN AS YOU CAN.'
                 f'You can make MULTIPLE PARALLEL parallel tool calls.'
             )
         }
-        response = self.generator.call_llm(messages=messages, toolbox=toolbox, system_message=system_message)
+        response = self.generator.call_llm(messages=messages, toolbox=self.toolbox, system_message=system_message)
 
         def execute_tool(tool_name, command):
             try:
@@ -77,8 +59,8 @@ class Agent:
 
         # Step 3: If the LLM used any tools, run them
         if response.message.tool_calls:
-            calls = response.message.tool_calls
 
+            calls = response.message.tool_calls
             threads = []
             if calls:
                 for call in calls:
@@ -95,15 +77,14 @@ class Agent:
                 system_message = {
                     'role': 'system',
                     'content': (
-                        f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''}"
-                        f'Your job is to give the response to the user query based on tool responses'
-                        f'Current Date: {datetime.datetime.now().strftime("%Y-%m-%d")}'
+                        f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''} "
+                        f'Your job is to give the response to the user query based on tool responses. '
+                        f'Current Date: {datetime.datetime.now().strftime("%Y-%m-%d")}. '
                         f'Tool responses: {" ".join([f"*{tool_response.tool}: <<{tool_response.text if tool_response.text else tool_response.error}>>," for tool_response in tool_responses]) if tool_responses else None}'
 
                     )
                 }
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
-                self.link = [tool_response.link for tool_response in tool_responses if tool_response.link][0]
         return {'role': 'assistant', 'content': response.message.content}
 
 app = FastAPI()
@@ -129,8 +110,7 @@ async def process_request(request_body: Dict[str, Any]):
         response_message = agent.call_agent(messages)
         response = {
             "status": "success",
-            "message": response_message,
-            "link": agent.link
+            "message": response_message
         }
         print(response)
         return response
