@@ -1,3 +1,6 @@
+fastapi
+uvicorn
+python-dotenv
 langchain
 openai
 transformers
@@ -17,7 +20,4 @@ tiktoken
 huggingface-hub
 fsspec
 typing-extensions
-tqdm
-fastapi
-uvicorn
-python-dotenv 
+tqdm 
