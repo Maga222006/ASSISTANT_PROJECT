@@ -1,4 +1,4 @@
-run = "pip install --no-cache-dir -r requirements.txt && uvicorn agent:app --host 0.0.0.0 --port 8080"
+run = "pip install -r requirements.txt && python -m uvicorn agent:app --host 0.0.0.0 --port 8080"
 language = "python3"
 entrypoint = "agent.py"
 
@@ -6,4 +6,5 @@ entrypoint = "agent.py"
 channel = "stable-22_11"
 
 [env]
-PYTHONPATH = "." 
+PYTHONPATH = "."
+PATH = "${PYTHONPATH}:${PATH}" 
