@@ -21,6 +21,9 @@ wheels/
 *.egg
 MANIFEST
 
+# Test files
+test.py
+
 # Virtual Environment
 venv/
 env/
