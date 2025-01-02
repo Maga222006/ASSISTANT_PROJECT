@@ -27,7 +27,7 @@ class Tool:
         self.schema = {
               'type': 'function',
               'function': {
-                  'name': 'time',
+                  'name': 'current_time',
                   'description': 'Get the current time and date for the location, city, place, etc.'
                                  'Use every time user asks about current time regardless how many times.',
                   'parameters': {
@@ -46,6 +46,6 @@ class Tool:
         location_data = self.geolocator.geocode(location) if location else self.geolocator.geocode(os.getenv('LOCATION'))
         timezone = pytz.timezone(self.tf.timezone_at(lat=location_data.latitude, lng=location_data.longitude))
         return ToolResponse(
-            tool="time",
+            tool="current_time",
             text=f"Current date and time for {location.upper() if location else os.getenv('LOCATION')}: {datetime.datetime.now(timezone).strftime('%Y-%m-%d %H:%M')}, {self.weekday_mapping[datetime.datetime.now().weekday()]}."
         )
