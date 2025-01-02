@@ -10,7 +10,6 @@ import importlib
 import threading
 import logging
 load_dotenv()
-logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w", format="%(asctime)s - %(levelname)s - %(message)s")
 
 class Agent:
     def __init__(self):
