@@ -12,8 +12,9 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'timer',
-                'description': 'Timer function, starts timer for hours, minutes or seconds'
-                               'Be very careful with each parameter',
+                'description': 'Timer function, starts timer for hours, minutes or seconds.'
+                               'Be very careful with each parameter.'
+                               'Use only when you need to set a timer.',
                 'parameters': {
                     'type': 'object',
                     'properties': {

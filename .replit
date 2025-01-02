@@ -1,4 +1,4 @@
-run = "pip install --user -r requirements.txt && python -m uvicorn agent:app --host 0.0.0.0 --port 8080"
+run = "pip install --user -r requirements.txt && python -m uvicorn main:app --host 0.0.0.0 --port 8080"
 language = "python3"
 
 [nix]

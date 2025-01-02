@@ -29,7 +29,7 @@ class Tool:
               'function': {
                   'name': 'time',
                   'description': 'Get the current time and date for the location, city, place, etc.'
-                                 'Use every time user asks about time regardless how many times.',
+                                 'Use every time user asks about current time regardless how many times.',
                   'parameters': {
                       'type': 'object',
                       'properties': {

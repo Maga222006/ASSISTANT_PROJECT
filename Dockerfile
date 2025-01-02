@@ -23,4 +23,4 @@ EXPOSE 7860
 ENV PATH=/home/user/.local/bin:$PATH
 
 # Command to run the application using uvicorn
-CMD ["uvicorn", "agent:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]

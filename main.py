@@ -9,7 +9,7 @@ import importlib
 import threading
 import logging
 load_dotenv()
-
+logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w", format="%(asctime)s - %(levelname)s - %(message)s")
 
 class Agent:
     def __init__(self):
@@ -61,6 +61,7 @@ class Agent:
         if response.message.tool_calls:
 
             calls = response.message.tool_calls
+            logging.info(calls)
             threads = []
             if calls:
                 for call in calls:
@@ -78,12 +79,13 @@ class Agent:
                     'role': 'system',
                     'content': (
                         f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''} "
-                        f'Your job is to give the response to the user query based on tool responses. '
+                        f'Your job id to respond to the user queries BASED ONLY ON tool responses below!'
                         f'Current Date: {datetime.datetime.now().strftime("%Y-%m-%d")}. '
                         f'Tool responses: {" ".join([f"*{tool_response.tool}: <<{tool_response.text if tool_response.text else tool_response.error}>>," for tool_response in tool_responses]) if tool_responses else None}'
 
                     )
                 }
+                logging.info(system_message)
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
         return {'role': 'assistant', 'content': response.message.content}
 
