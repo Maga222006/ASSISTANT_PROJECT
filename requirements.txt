@@ -4,6 +4,7 @@ python-dotenv
 langchain
 openai
 transformers
+wolframalpha
 geopy
 langchain-community
 timezonefinder
