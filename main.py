@@ -61,7 +61,7 @@ class Agent:
         if response.message.tool_calls:
 
             calls = response.message.tool_calls
-            logging.info(calls)
+            logging.warning(calls)
             threads = []
             if calls:
                 for call in calls:
@@ -85,7 +85,7 @@ class Agent:
 
                     )
                 }
-                logging.info(system_message)
+                logging.warning(system_message)
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
         return {'role': 'assistant', 'content': response.message.content}
 
