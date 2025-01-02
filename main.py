@@ -1,3 +1,4 @@
+
 import datetime
 from dotenv import load_dotenv
 import os
@@ -112,7 +113,7 @@ async def process_request(request_body: Dict[str, Any]):
         response_message = agent.call_agent(messages)
         response = {
             "status": "success",
-            "message": response_message
+            "message": response_message,
             "system_message": agent.sys
         }
         print(response)
