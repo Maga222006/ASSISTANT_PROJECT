@@ -4,6 +4,7 @@ python-dotenv
 langchain
 openai
 transformers
+wikipedia 
 wolframalpha
 geopy
 langchain-community
