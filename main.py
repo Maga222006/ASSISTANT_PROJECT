@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w", format
 
 class Agent:
     def __init__(self):
+        self.sys=''
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
         self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
@@ -61,7 +62,6 @@ class Agent:
         if response.message.tool_calls:
 
             calls = response.message.tool_calls
-            logging.warning(calls)
             threads = []
             if calls:
                 for call in calls:
@@ -85,7 +85,7 @@ class Agent:
 
                     )
                 }
-                logging.warning(system_message)
+                self.sys = system_message
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
         return {'role': 'assistant', 'content': response.message.content}
 
@@ -113,6 +113,7 @@ async def process_request(request_body: Dict[str, Any]):
         response = {
             "status": "success",
             "message": response_message
+            "system_message": agent.sys
         }
         print(response)
         return response
