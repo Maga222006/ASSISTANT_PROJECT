@@ -52,7 +52,11 @@ class Agent:
 
         def execute_tool(tool_name, command):
             try:
-                tool_response = self.uploaded_tools[tool_name].run(**json.loads(str(command)))
+                arguments = json.loads(str(command))
+                if arguments:
+                    tool_response = self.uploaded_tools[tool_name].run(**arguments)
+                else:
+                    tool_responses = self.uploaded_tools[tool_name].run()
                 if tool_response:
                     tool_responses.append(tool_response)
             except:
