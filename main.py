@@ -13,8 +13,6 @@ load_dotenv()
 
 class Agent:
     def __init__(self):
-        self.sys=''
-        self.calls = []
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
         self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
@@ -68,7 +66,6 @@ class Agent:
         if response.message.tool_calls:
 
             calls = response.message.tool_calls
-            self.calls=calls
             threads = []
             if calls:
                 for call in calls:
@@ -92,7 +89,6 @@ class Agent:
 
                     )
                 }
-                self.sys = system_message
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
         return {'role': 'assistant', 'content': response.message.content}
 
@@ -119,9 +115,7 @@ async def process_request(request_body: Dict[str, Any]):
         response_message = agent.call_agent(messages)
         response = {
             "status": "success",
-            "message": response_message,
-            "calls": agent.calls,
-            "system_message": agent.sys
+            "message": response_message
         }
         print(response)
         return response
