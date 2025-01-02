@@ -55,7 +55,7 @@ class Agent:
                 tool_response = self.uploaded_tools[tool_name].run(**json.loads(str(command)))
                 if tool_response:
                     tool_responses.append(tool_response)
-            except json.decoder.JSONDecodeError:
+            except:
                 tool_response = self.uploaded_tools[tool_name].run()
                 if tool_response:
                     tool_responses.append(tool_response)
