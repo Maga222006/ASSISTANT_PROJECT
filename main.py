@@ -56,9 +56,10 @@ class Agent:
                 if arguments:
                     tool_response = self.uploaded_tools[tool_name].run(**arguments)
                 else:
-                    tool_responses = self.uploaded_tools[tool_name].run()
+                    tool_response = self.uploaded_tools[tool_name].run()
                 if tool_response:
                     tool_responses.append(tool_response)
+
             except:
                 tool_response = self.uploaded_tools[tool_name].run()
                 if tool_response:
