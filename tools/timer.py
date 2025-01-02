@@ -15,7 +15,7 @@ class Tool:
                 'description': 'Timer function, starts timer for hours, minutes or seconds.'
                                'Be very careful with each parameter.'
                                'Use only when you need to set a timer.'
-                               'Do not use this tool to retrieve the current time anywhere, use "time" tool instead',
+                               'Do not use this tool to retrieve the current time anywhere, use "current_time" tool instead',
                 'parameters': {
                     'type': 'object',
                     'properties': {
