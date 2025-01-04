@@ -33,6 +33,6 @@ class Tool:
     def run(self, time):
         return ToolResponse(
             tool="alarm",
-            text=f"Alarm for {time} set: success",
+            text=time,
             alarm=time
         )
