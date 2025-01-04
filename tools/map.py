@@ -34,6 +34,6 @@ class Tool:
     def run(self, location):
         return ToolResponse(
             tool="map",
-            text="Searching the location on map.",
+            text=f"Searching {location}",
             location=location
         )
