@@ -1,10 +1,14 @@
 class ToolResponse:
-    def __init__(self, tool, text=None, error=None, link=None, image=None):
+    def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
         self.text = text
         self.error = error
         self.link = link
-        self.image = image
+        self.location = location
+        self.alarm = alarm
+        self.timer = timer
+        self.stopwatch = stopwatch
+
 
 class Tool:
     def __init__(self, ):
@@ -46,6 +50,6 @@ class Tool:
     def run(self, hours=0, minutes=0, seconds=0):
         return ToolResponse(
             tool="timer",
-            text=f"The timer has been set. Timer link: http://www.google.com/search?q=timer+for+{hours}+hours+{minutes}+minutes+{seconds}+seconds",
-            link=f"http://www.google.com/search?q=timer+for+{hours}+hours+{minutes}+minutes+{seconds}+seconds"
+            text="Timer set: success",
+            timer=hours*3600+minutes*60+seconds
         )
