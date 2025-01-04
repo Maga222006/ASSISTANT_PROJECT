@@ -8,12 +8,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class ToolResponse:
-    def __init__(self, tool, text=None, error=None, link=None, image=None):
+    def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
         self.text = text
         self.error = error
         self.link = link
-        self.image = image
+        self.location = location
+        self.alarm = alarm
+        self.timer = timer
+        self.stopwatch = stopwatch
 
 class Tool:
     def __init__(self):
@@ -28,16 +31,16 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'weather',
-                'description': 'Get the weather forecast for the week or several days'
-                               'Use it to search weather forecast for the location, city, place, etc'
-                               'Use every time user asks about current weather or forecast regardless how many times.',
+                'description': 'Get the weather forecast for the week or several days. '
+                               'Use it to search weather forecast for the location, city, place, etc. '
+                               'Use every time user asks about current weather or forecast regardless how many times. ',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'location': {
                             'type': 'str',
-                            'description': "The location, i.e city, village, country, etc."
-                                           "By default None (location will be determined automatically)",
+                            'description': "The location, i.e city, village, country, etc. "
+                                           "By default None (location will be determined automatically). ",
                         },
                     },
                 }
