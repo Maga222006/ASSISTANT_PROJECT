@@ -6,12 +6,16 @@ from model import Generator
 import pytz
 
 class ToolResponse:
-    def __init__(self, tool, text=None, error=None, link=None, image=None):
+    def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
         self.text = text
         self.error = error
         self.link = link
-        self.image = image
+        self.location = location
+        self.alarm = alarm
+        self.timer = timer
+        self.stopwatch = stopwatch
+
 
 class Tool:
     def __init__(self):
