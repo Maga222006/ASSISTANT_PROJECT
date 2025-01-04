@@ -1,4 +1,3 @@
-
 import datetime
 from dotenv import load_dotenv
 import os
@@ -10,6 +9,7 @@ import importlib
 import threading
 import logging
 load_dotenv()
+
 
 class Agent:
     def __init__(self):
@@ -33,6 +33,15 @@ class Agent:
         return skills
 
     def call_agent(self, messages):
+        agent_response = {
+            "status": "success",
+            "message": None,
+            "links": [],
+            "location": None,
+            "alarm": None,
+            "timer": None,
+            "stopwatch": None
+        }
         tool_responses = []
         system_message = {
             'role': 'system',
@@ -79,6 +88,13 @@ class Agent:
                 for thread in threads:
                     thread.join()
 
+                for tool_response in tool_responses:
+                    if tool_response.stopwatch: agent_response["stopwatch"] = tool_response.stopwatch
+                    if tool_response.location: agent_response["location"] = tool_response.location
+                    if tool_response.link: agent_response["links"].append(tool_response.link)
+                    if tool_response.timer: agent_response["timer"] = tool_response.timer
+                    if tool_response.alarm: agent_response["alarm"] = tool_response.alarm
+
                 system_message = {
                     'role': 'system',
                     'content': (
@@ -90,7 +106,8 @@ class Agent:
                     )
                 }
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
-        return {'role': 'assistant', 'content': response.message.content}
+        agent_response['message'] = {'role': 'assistant', 'content': response.message.content}
+        return agent_response
 
 app = FastAPI()
 agent = False
@@ -112,11 +129,7 @@ async def process_request(request_body: Dict[str, Any]):
         os.environ['UNITS'] = request_body.get("units", "metric")
         if not agent:
             agent = Agent()
-        response_message = agent.call_agent(messages)
-        response = {
-            "status": "success",
-            "message": response_message
-        }
+        response = agent.call_agent(messages)
         print(response)
         return response
 
