@@ -1,14 +1,16 @@
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper, WolframAlphaAPIWrapper, WikipediaAPIWrapper
 from threading import Thread
 
-
 class ToolResponse:
-    def __init__(self, tool, text=None, error=None, link=None, image=None):
+    def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
         self.text = text
         self.error = error
         self.link = link
-        self.image = image
+        self.location = location
+        self.alarm = alarm
+        self.timer = timer
+        self.stopwatch = stopwatch
 
 class Tool:
     def __init__(self):
@@ -19,14 +21,14 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'web_search',
-                'description': 'Search information about current events, famous people, etc on the internet.'
-                               'Do NOT search weather forecast or time with it, you have separate functions for that',
+                'description': 'Search information about current events, famous people, etc on the internet. '
+                               'Do NOT search weather forecast or time with it, you have separate functions for that. ',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'query': {
                             'type': 'string',
-                            'description': 'The search query or question for browser',
+                            'description': 'The search query or question for browser. ',
                         },
                     },
                     'required': ['query'],
