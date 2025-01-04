@@ -34,6 +34,6 @@ class Tool:
     def run(self, action):
         return ToolResponse(
             tool="stopwatch",
-            text=f"Stopwatch {action}: success",
+            text=action,
             stopwatch=action
         )
