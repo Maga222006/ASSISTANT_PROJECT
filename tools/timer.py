@@ -50,6 +50,6 @@ class Tool:
     def run(self, hours=0, minutes=0, seconds=0):
         return ToolResponse(
             tool="timer",
-            text="Timer set: success",
+            text=f"{hours} hours, {minutes} minutes, {seconds} seconds.",
             timer=hours*3600+minutes*60+seconds
         )
