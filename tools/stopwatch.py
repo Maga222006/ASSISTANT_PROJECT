@@ -16,13 +16,13 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'stopwatch',
-                'description': 'Stopwatch function, starts/stops the stopwatch.',
+                'description': 'Always use this function to control the stopwatch. Use it whenever the user asks to start or stop a stopwatch, ensuring precise tracking of time.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'action': {
                             'type': 'str',
-                            'description': 'One of the two commands start/stop the stopwatch.',
+                            'description': 'Specify whether to start or stop the stopwatch. Accepted values are "start" or "stop".',
                             'enum': ["start", "stop"]
                         }
                     },
