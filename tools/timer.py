@@ -53,3 +53,4 @@ class Tool:
             text=f"{hours} hours, {minutes} minutes, {seconds} seconds.",
             timer=hours*3600+minutes*60+seconds
         )
+        
