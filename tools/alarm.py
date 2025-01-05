@@ -17,7 +17,7 @@ class Tool:
             'function': {
                 'name': 'alarm',
                 'description': 'Always use this function to set an alarm. '
-                               'Use it whenever the user requests to set an alarm for a specific time.',
+                               'Use it EVERY TIME user requests to set an alarm for a specific time.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
