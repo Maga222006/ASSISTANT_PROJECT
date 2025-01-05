@@ -16,14 +16,14 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'map',
-                'description': 'Open the location in the map'
-                               'Use if the user asks for directions, how to get somwhere or show something on the map',
+                'description': 'Always use this function to display a location on the map. '
+                               'Use it every time user asks for directions, how to get to a place, or requests to view/search/show/retrieve/display any location.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'location': {
                             'type': 'str',
-                            'description': 'Location name'
+                            'description': 'The exact name or address of the location to show on the map.'
                         }
                     },
                     'required': ['location'],
