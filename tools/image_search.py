@@ -18,19 +18,20 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'image_search',
-                'description': 'Search for an image with the user query.',
+                'description': 'Always use this function to find images based on the user’s query. '
+                               'Use it whenever the user requests an image or asks to search/show/retrieve/display for something visually.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'query': {
                             'type': 'str',
-                            'description': 'The text query for searching the image.',
+                            'description': 'The keywords or phrase describing the image the user wants to find.',
                         },
                     },
                     'required': ['query'],
                 }
-            }}
-
+            }
+        }
 
     def run(self, query):
         try:
