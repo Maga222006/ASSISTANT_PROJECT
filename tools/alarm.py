@@ -16,13 +16,14 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'alarm',
-                'description': 'Alarm function, sets an alarm for the specific time.',
+                'description': 'Always use this function to set an alarm. '
+                               'Use it whenever the user requests to set an alarm for a specific time.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'time': {
                             'type': 'str',
-                            'description': 'Alarm time in format HH:MM .'
+                            'description': 'The exact time for the alarm in HH:MM format (24-hour clock).'
                         }
                     },
                     'required': ['time'],
