@@ -55,7 +55,7 @@ class Agent:
                 "Always pick the best tool or tools for the user's query."
     )
 }
-        response = self.generator.call_llm(messages=messages, toolbox=self.toolbox, system_message=system_message)
+        response = self.generator.call_llm(messages=messages[-8:], toolbox=self.toolbox, system_message=system_message)
 
         def execute_tool(tool_name, command):
             try:
