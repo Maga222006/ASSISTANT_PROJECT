@@ -24,25 +24,27 @@ class Tool:
         self.call_llm = self.generator.call_llm
         self.geolocator = Nominatim(user_agent="my_geocoder")
         self.api_key = os.getenv('OPENWEATHERMAP_API_KEY')
+
         if not self.api_key:
             logging.warning("OpenWeatherMap API key not found")
         self.schema = {
             'type': 'function',
             'function': {
                 'name': 'weather',
-                'description': 'Always use this function to get the weather forecast for the current day, week, or multiple days. '
-                               'Use it whenever the user asks about the current weather or future forecast, no matter how frequently they inquire.',
+                'description': 'Get the weather forecast for the week or several days. '
+                               'Use it to search weather forecast for the location, city, place, etc. '
+                               'Use every time user asks about current weather or forecast regardless how many times. ',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'location': {
                             'type': 'str',
-                            'description': "The name of the location, such as a city, village, or country. Defaults to None, which will automatically determine the user's location.",
+                            'description': "The location, i.e city, village, country, etc. "
+                                           "By default None (location will be determined automatically). ",
                         },
                     },
-                },
-            }
-        }
+                }
+            }}
 
     def _get_weather_data(self, lat: float, lon: float) -> list:
         """Fetch weather data from OpenWeatherMap API."""
