@@ -17,7 +17,7 @@ class Tool:
             'function': {
                 'name': 'map',
                 'description': 'Always use this function to display a location on the map. '
-                               'Use it every time user asks for directions, how to get to a place, or requests to view/search/show/retrieve/display any location.',
+                               'Use it EVERY TIME user asks for directions, how to get to a place, or requests to view/search/show/retrieve/display any location.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
