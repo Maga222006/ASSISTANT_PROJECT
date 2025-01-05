@@ -16,7 +16,8 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'stopwatch',
-                'description': 'Always use this function to control the stopwatch. Use it whenever the user asks to start or stop a stopwatch, ensuring precise tracking of time.',
+                'description': 'Always use this function to control the stopwatch. '
+                               'Use it EVERY TIME user asks to start or stop a stopwatch.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
