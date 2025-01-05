@@ -100,7 +100,7 @@ class Agent:
                     'content': (
                         f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''} "
                         f'Your job id to respond to the user queries BASED ONLY ON tool responses below!'
-                        f'Be precise do not make up information outside the tool responses.'
+                        f'Be precise, do not make up information. Be clear, take the data from tool responses.'
                         f'Current Date: {datetime.datetime.now().strftime("%Y-%m-%d")}. '
                         f'Tool responses: {" ".join([f"*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error}," for tool_response in tool_responses]) if tool_responses else None}'
 
