@@ -29,22 +29,22 @@ class Tool:
                                 "Sunday")
 
         self.schema = {
-            'type': 'function',
-            'function': {
-                'name': 'current_time',
-                'description': 'Always use this function to get the current time and date for a specified location. '
-                               'Use it every time user asks about the current time, regardless of how often they ask.',
-                'parameters': {
-                    'type': 'object',
-                    'properties': {
-                        'location': {
-                            'type': 'str',
-                            'description': 'The name of the location, such as a city, village, or country. Defaults to None, which retrieves the current time for the user\'s location.',
-                        },
-                    },
-                }
-            }
-        }
+              'type': 'function',
+              'function': {
+                  'name': 'current_time',
+                  'description': 'Get the current time and date for the location, city, place, etc.'
+                                 'Use every time user asks about current time regardless how many times.',
+                  'parameters': {
+                      'type': 'object',
+                      'properties': {
+                          'location': {
+                              'type': 'str',
+                              'description': 'The location, i.e city, village, country, etc.'
+                                             'By default None (searches the time for user location)',
+                          },
+                      },
+                  }
+              }}
 
     def run(self, location=None):
         location_data = self.geolocator.geocode(location) if location else self.geolocator.geocode(os.getenv('LOCATION'))
