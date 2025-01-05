@@ -19,7 +19,7 @@ class Tool:
             'function': {
                 'name': 'image_search',
                 'description': 'Always use this function to find images based on the user’s query. '
-                               'Use it whenever the user requests an image or asks to search/show/retrieve/display for something visually.',
+                               'Use it EVERY TIME user requests an image or asks to search/show/retrieve/display something visually.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
