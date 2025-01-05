@@ -46,14 +46,15 @@ class Agent:
         system_message = {
             'role': 'system',
             'content': (
-                f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''}"
-                f'Your job is to call the BEST FITTING tools for the user query.'
-                f'EVERY TIME you need up-to-date information (weather forecast, current time, famous people, web search, image search) or certain actions (alarm, map, stopwatch, timer), call the tools.'
-                f"Tools available: {(tool['function']['name'] for tool in self.toolbox)}"
-                f'Call tools AS OFTEN AS YOU CAN.'
-                f'You can make MULTIPLE PARALLEL parallel tool calls.'
-            )
-        }
+                f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
+                f"The user is located in {os.getenv('LOCATION')}. "
+                "Whenever the user asks a question or wants an action, you must decide if any tool can help. "
+                "If the request needs real-time data (like weather, time, or web info) or special actions "
+                "(such as alarms, maps, or timers), call the most suitable tool. "
+                "You can call multiple tools as needed, even at the same time. "
+                "Always pick the best tool or tools for the user's query."
+    )
+}
         response = self.generator.call_llm(messages=messages, toolbox=self.toolbox, system_message=system_message)
 
         def execute_tool(tool_name, command):
@@ -98,12 +99,13 @@ class Agent:
                 system_message = {
                     'role': 'system',
                     'content': (
-                        f"You are helpful AI assistant {f'''named {os.getenv('ASSISTANT_NAME')}.''' if os.getenv('ASSISTANT_NAME') else '''.'''} "
-                        f'Your job id to respond to the user queries BASED ONLY ON tool responses below!'
-                        f'Be precise, do not make up information. Be clear, take the data from tool responses.'
-                        f'Current Date: {datetime.datetime.now().strftime("%Y-%m-%d")}. '
-                        f'Tool responses: {" ".join([f"*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error}," for tool_response in tool_responses]) if tool_responses else None}'
-
+                        f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
+                        f"The user is located in {os.getenv('LOCATION') or 'an unknown location'}. "
+                        "You must answer the user **only** using the results from the tools. "
+                        "Do not invent information that the tools did not provide. "
+                        f"Today's date is {datetime.datetime.now().strftime('%Y-%m-%d')}. "
+                        f"Tool Responses: "
+                        f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
                     )
                 }
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
