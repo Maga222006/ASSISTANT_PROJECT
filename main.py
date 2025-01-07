@@ -1,4 +1,4 @@
-import datetime
+from tools import current_time
 from dotenv import load_dotenv
 import os
 from fastapi import FastAPI, HTTPException
@@ -13,6 +13,7 @@ load_dotenv()
 
 class Agent:
     def __init__(self):
+        self.current_time = current_time.Tool()
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
         self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
@@ -48,6 +49,7 @@ class Agent:
             'content': (
                 f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                 f"The user is located in {os.getenv('LOCATION')}. "
+                f"The local time is {self.current_time.run()}. "
                 "Whenever the user asks a question or wants an action, you must decide if any tool can help. "
                 "If the request needs real-time data (like weather, time, or web info) or special actions "
                 "(such as alarms, maps, or timers), call the most suitable tool. "
@@ -103,7 +105,7 @@ class Agent:
                         f"The user is located in {os.getenv('LOCATION') or 'an unknown location'}. "
                         "You must answer the user **only** using the results from the tools. "
                         "Do not invent information that the tools did not provide. "
-                        f"Today's date is {datetime.datetime.now().strftime('%Y-%m-%d')}. "
+                        f"Local time: {self.current_time.run()}. "
                         f"Tool Responses: "
                         f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
                     )
