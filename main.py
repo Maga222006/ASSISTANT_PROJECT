@@ -49,16 +49,13 @@ class Agent:
             'content': (
                 f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                 f"The user is located in {os.getenv('LOCATION')}. "
-                f"The local time is {self.current_time.run()}. "
-                "Whenever the user asks a question or wants an action, you must decide if any tool can help. "
-                "If the request needs real-time data (like weather, time, or web info) or special actions "
-                "(such as alarms, maps, or timers), call the most suitable tool. "
-                "You can call multiple tools as needed, even at the same time. "
-                "Always pick the best tool or tools for the user's query."
-    )
-}
+                "When the user makes a request, assess whether it requires real-time data or specific actions. "
+                "If so, determine and utilize the appropriate tool(s) to fulfill the request. "
+                "You may call multiple tools as needed to provide comprehensive responses. "
+                "Always choose the best approach to address the user's query effectively."
+            )
+        }
         response = self.generator.call_llm(messages=messages[-8:], toolbox=self.toolbox, system_message=system_message)
-
         def execute_tool(tool_name, command):
             try:
                 arguments = json.loads(str(command))
@@ -135,7 +132,6 @@ async def process_request(request_body: Dict[str, Any]):
         if not agent:
             agent = Agent()
         response = agent.call_agent(messages)
-        print(response)
         return response
 
     except Exception as e:
