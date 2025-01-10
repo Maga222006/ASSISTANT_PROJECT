@@ -4,7 +4,8 @@ python-dotenv
 langchain
 openai
 transformers
-wikipedia 
+wikipedia
+semantic-router[local]==0.0.72
 wolframalpha
 geopy
 langchain-community
