@@ -45,6 +45,7 @@ class Tool:
         }
 
     def run(self, location):
+        """Display the location on the map."""
         return ToolResponse(
             tool="map",
             text=f"Searching {location}",

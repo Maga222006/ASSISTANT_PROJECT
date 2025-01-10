@@ -60,6 +60,7 @@ class Tool:
         }
 
     def run(self, hours=0, minutes=0, seconds=0):
+        """Set a time.r"""
         return ToolResponse(
             tool="timer",
             text=f"{hours} hours, {minutes} minutes, {seconds} seconds.",

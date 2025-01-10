@@ -45,15 +45,15 @@ class Tool:
                 }
             }}
 
-
     def run(self, query):
+        """Get the image search results for the given query."""
         try:
             with DDGS() as ddgs:
                 results = ddgs.images(query, max_results=1, safesearch='off')
             if results:
                 return ToolResponse(
                     tool="image_search",
-                    text="Images retrieved.",
+                    text="Images have been retrieved.",
                     link=results[0]['image']
                 )
         except Exception as e:

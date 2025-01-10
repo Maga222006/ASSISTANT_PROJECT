@@ -46,6 +46,7 @@ class Tool:
         }
 
     def run(self, action):
+        """Start/stop the stopwatch."""
         return ToolResponse(
             tool="stopwatch",
             text=action,

@@ -122,7 +122,7 @@ class Tool:
 
         return days
 
-    def run(self, location=None) -> ToolResponse | ToolResponse:
+    def run(self, location=None):
         """Get weather forecast for a location or current position."""
         try:
             if location:
@@ -144,8 +144,7 @@ class Tool:
                 text=f"Location: {location if location else os.getenv('LOCATION')}; Forecast: "+'; '.join(' '.join(str(item) for item in day) for day in forecast)
             )
         except Exception as e:
-            logging.error(f"Weather error: {str(e)}")
             return ToolResponse(
                 tool='weather',
-                error=str(e)
+                error=f"An error occurred during the weather forecast retrieval: {e}"
             )

@@ -11,7 +11,7 @@ geopy
 langchain-community
 timezonefinder
 geocoder
-duckduckgo-search
+duckduckgo_search==5.3.1b1
 requests
 aiohttp
 colorama

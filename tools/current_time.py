@@ -66,6 +66,7 @@ class Tool:
               }}
 
     def run(self, location=None):
+        """Get the current time for a location or current position."""
         location_data = self.geolocator.geocode(location) if location else self.geolocator.geocode(os.getenv('LOCATION'))
         timezone = pytz.timezone(self.tf.timezone_at(lat=location_data.latitude, lng=location_data.longitude))
         return ToolResponse(

@@ -41,6 +41,7 @@ class Tool:
         }
 
     def run(self, time):
+        """Set an alarm for the given time."""
         return ToolResponse(
             tool="alarm",
             text=time,

@@ -1,6 +1,5 @@
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper, WolframAlphaAPIWrapper, WikipediaAPIWrapper
 from threading import Thread
-
 from semantic_router import Route
 
 
@@ -72,6 +71,7 @@ class Tool:
         }
 
     def run(self, query):
+        """Get web search results for the given query."""
         result = {'wolfram alpha': '', 'web search': '', 'wikipedia': ''}
 
         def wiki_thread():
@@ -86,7 +86,7 @@ class Tool:
                 result['wolfram alpha'] = wolfram_result
 
         def ddg_thread():
-            result['web search'] = self.ddg.run(query)
+            result['web search'] = self.ddg.run(query=query, max_results=5)
 
         # Start the threads
         wikipedia_thread = Thread(target=wiki_thread)

@@ -1,15 +1,15 @@
-from semantic_router import HybridRouteLayer
 from semantic_router.encoders import HuggingFaceEncoder, TfidfEncoder
+from semantic_router import HybridRouteLayer
+from fastapi import FastAPI, HTTPException
 from tools import current_time
 from dotenv import load_dotenv
-import os
-from fastapi import FastAPI, HTTPException
 from typing import Dict, Any
 from model import Generator
 import json
 import importlib
 import threading
 import logging
+import os
 load_dotenv()
 
 class Agent:
@@ -134,8 +134,6 @@ async def process_request(request_body: Dict[str, Any]):
     try:
         # Access fields from the raw dictionary
         messages = json.loads(request_body.get("messages", ""))
-        os.environ['OPENWEATHERMAP_API_KEY'] = request_body.get("openweathermap_api_key", "50b35515160c2d0256e022dae872895b")
-        os.environ['WOLFRAM_ALPHA_APPID'] = request_body.get("wolfram_alpha_appid", "AVQW9H-UX8U8TU5KU")
         os.environ['TOOl_CALLING_MODEL'] = request_body.get("tool_calling_model", "")
         os.environ['RESPONDING_MODEL'] = request_body.get("responding_model", "")
         os.environ['OPENAI_API_BASE'] = request_body.get("openai_api_base", "")
