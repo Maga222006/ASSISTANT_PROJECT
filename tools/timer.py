@@ -1,3 +1,6 @@
+from semantic_router import Route
+
+
 class ToolResponse:
     def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
@@ -12,6 +15,15 @@ class ToolResponse:
 
 class Tool:
     def __init__(self, ):
+        self.route = Route(
+            name="timer",
+            utterances=[
+                "set the timer for",
+                "notch minutes seconds hours",
+                "start the timer for sec min h",
+                "countdown secs mins h"
+            ],
+        )
         self.schema = {
             'type': 'function',
             'function': {
@@ -48,9 +60,9 @@ class Tool:
         }
 
     def run(self, hours=0, minutes=0, seconds=0):
+        """Set a time.r"""
         return ToolResponse(
             tool="timer",
             text=f"{hours} hours, {minutes} minutes, {seconds} seconds.",
             timer=hours*3600+minutes*60+seconds
         )
-        

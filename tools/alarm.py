@@ -1,3 +1,6 @@
+from semantic_router import Route
+
+
 class ToolResponse:
     def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
@@ -12,18 +15,24 @@ class ToolResponse:
 
 class Tool:
     def __init__(self, ):
+        self.route = Route(
+            name="alarm",
+            utterances=[
+                "set an alarm for",
+                "start an alarm for",
+            ],
+        )
         self.schema = {
             'type': 'function',
             'function': {
                 'name': 'alarm',
-                'description': 'Always use this function to set an alarm. '
-                               'Use it EVERY TIME user requests to set an alarm for a specific time.',
+                'description': 'Alarm function, sets an alarm for the specific time.',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'time': {
                             'type': 'str',
-                            'description': 'The exact time for the alarm in HH:MM format (24-hour clock).'
+                            'description': 'Alarm time in format HH:MM .'
                         }
                     },
                     'required': ['time'],
@@ -32,6 +41,7 @@ class Tool:
         }
 
     def run(self, time):
+        """Set an alarm for the given time."""
         return ToolResponse(
             tool="alarm",
             text=time,

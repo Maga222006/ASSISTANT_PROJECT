@@ -1,3 +1,6 @@
+from semantic_router import Route
+
+
 class ToolResponse:
     def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
@@ -12,18 +15,28 @@ class ToolResponse:
 
 class Tool:
     def __init__(self, ):
+        self.route = Route(
+            name="map",
+            utterances=[
+                "show me on the map",
+                "open the map",
+                "build an itinerary",
+                "show me where is"
+                "give me the route"
+            ],
+        )
         self.schema = {
             'type': 'function',
             'function': {
                 'name': 'map',
-                'description': 'Always use this function to display a location on the map. '
-                               'Use it EVERY TIME user asks for directions, how to get to a place, or requests to view/search/show/retrieve/display any location.',
+                'description': 'Open the location in the map'
+                               'Use every time user asks for directions, how to get somwhere or to show something on the map',
                 'parameters': {
                     'type': 'object',
                     'properties': {
                         'location': {
                             'type': 'str',
-                            'description': 'The exact name or address of the location to show on the map.'
+                            'description': 'Location name'
                         }
                     },
                     'required': ['location'],
@@ -32,6 +45,7 @@ class Tool:
         }
 
     def run(self, location):
+        """Display the location on the map."""
         return ToolResponse(
             tool="map",
             text=f"Searching {location}",

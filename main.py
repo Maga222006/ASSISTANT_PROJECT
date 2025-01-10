@@ -1,23 +1,29 @@
+from semantic_router.encoders import HuggingFaceEncoder, TfidfEncoder
+from semantic_router import HybridRouteLayer
+from fastapi import FastAPI, HTTPException
 from tools import current_time
 from dotenv import load_dotenv
-import os
-from fastapi import FastAPI, HTTPException
 from typing import Dict, Any
 from model import Generator
 import json
 import importlib
 import threading
 import logging
+import os
 load_dotenv()
-
 
 class Agent:
     def __init__(self):
         self.current_time = current_time.Tool()
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
-        self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
-
+        self.schemas = [tool.schema for tool in self.uploaded_tools.values()]
+        self.routes = [tool.route for tool in self.uploaded_tools.values()]
+        self.router = HybridRouteLayer(
+            encoder=HuggingFaceEncoder(),
+            sparse_encoder=TfidfEncoder(),
+            routes=self.routes
+        )
     def load_tools(self):
         """Dynamically load skill modules from the 'tools' directory."""
         skills = {}
@@ -32,6 +38,15 @@ class Agent:
                     except (ImportError, AttributeError) as e:
                         logging.error(f"Error loading skill '{module_name}': {e}")
         return skills
+
+    def toolbox(self, query):
+        routes = self.router._query(query, 6)
+        if routes:
+            routes = set([route['route'] for route in routes])
+            routes.add('web_search')
+            return [schema for schema in self.schemas if schema['function']['name'] in routes]
+        return [schema for schema in self.schemas if schema['function']['name'] == 'web_search']
+
 
     def call_agent(self, messages):
         agent_response = {
@@ -55,7 +70,7 @@ class Agent:
                 "Always choose the best approach to address the user's query effectively."
             )
         }
-        response = self.generator.call_llm(messages=messages[-5:], toolbox=self.toolbox, system_message=system_message)
+        response = self.generator.call_llm(messages=messages[-8:], toolbox=self.toolbox(messages[-1]['content']), system_message=system_message)
         def execute_tool(tool_name, command):
             try:
                 arguments = json.loads(str(command))
@@ -73,7 +88,6 @@ class Agent:
 
         # Step 3: If the LLM used any tools, run them
         if response.message.tool_calls:
-
             calls = response.message.tool_calls
             threads = []
             if calls:
@@ -120,8 +134,6 @@ async def process_request(request_body: Dict[str, Any]):
     try:
         # Access fields from the raw dictionary
         messages = json.loads(request_body.get("messages", ""))
-        os.environ['OPENWEATHERMAP_API_KEY'] = request_body.get("openweathermap_api_key", "50b35515160c2d0256e022dae872895b")
-        os.environ['WOLFRAM_ALPHA_APPID'] = request_body.get("wolfram_alpha_appid", "AVQW9H-UX8U8TU5KU")
         os.environ['TOOl_CALLING_MODEL'] = request_body.get("tool_calling_model", "")
         os.environ['RESPONDING_MODEL'] = request_body.get("responding_model", "")
         os.environ['OPENAI_API_BASE'] = request_body.get("openai_api_base", "")

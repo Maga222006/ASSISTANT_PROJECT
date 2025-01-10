@@ -3,6 +3,8 @@ import requests
 import os
 import logging
 from geopy.geocoders import Nominatim
+from semantic_router import Route
+
 from model import Generator
 from dotenv import load_dotenv
 load_dotenv()
@@ -27,6 +29,27 @@ class Tool:
 
         if not self.api_key:
             logging.warning("OpenWeatherMap API key not found")
+        self.route = Route(
+            name="weather",
+            utterances=[
+                "gimme the forecast for the week"
+                "what will the weather be like"
+                "tell me what is the weather like today",
+                "what is the weather in ",
+                "weather in warshaw",
+                "weather",
+                "what weather is it",
+                "what is the weather like today",
+                "is it gonna rain tomorrow in ny",
+                "what is the weather like today in boston",
+                "is it sunny in berlin",
+                "what is the weather in makhachkala",
+                "weather in st petersburg",
+                "what's the weather like today in vienna",
+                "is it gonna rain in washington",
+                "will it rain or will it be sunny in london"
+            ],
+        )
         self.schema = {
             'type': 'function',
             'function': {
@@ -99,7 +122,7 @@ class Tool:
 
         return days
 
-    def run(self, location=None) -> ToolResponse | ToolResponse:
+    def run(self, location=None):
         """Get weather forecast for a location or current position."""
         try:
             if location:
@@ -121,8 +144,7 @@ class Tool:
                 text=f"Location: {location if location else os.getenv('LOCATION')}; Forecast: "+'; '.join(' '.join(str(item) for item in day) for day in forecast)
             )
         except Exception as e:
-            logging.error(f"Weather error: {str(e)}")
             return ToolResponse(
                 tool='weather',
-                error=str(e)
+                error=f"An error occurred during the weather forecast retrieval: {e}"
             )
