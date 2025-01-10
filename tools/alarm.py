@@ -1,6 +1,3 @@
-from semantic_router import Route
-
-
 class ToolResponse:
     def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
         self.tool = tool
@@ -15,13 +12,6 @@ class ToolResponse:
 
 class Tool:
     def __init__(self, ):
-        self.route = Route(
-            name="alarm",
-            utterances=[
-                "set an alarm for",
-                "start an alarm for",
-            ],
-        )
         self.schema = {
             'type': 'function',
             'function': {

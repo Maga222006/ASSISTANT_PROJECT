@@ -1,6 +1,5 @@
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper, WolframAlphaAPIWrapper, WikipediaAPIWrapper
 from threading import Thread
-from semantic_router import Route
 
 
 class ToolResponse:
@@ -19,38 +18,6 @@ class Tool:
         self.ddg = DuckDuckGoSearchAPIWrapper()
         self.wolfram = WolframAlphaAPIWrapper()
         self.wikipedia = WikipediaAPIWrapper()
-        self.route = Route(
-            name='web_search',
-            utterances=[
-                'what is the semantic router',
-                'what is the everest mountain',
-                'what is compass',
-                'what is '
-                'who is',
-                'how old is',
-                'how long is',
-                'and who is joe biden',
-                "who is he",
-                "who is his wife",
-                "tell me about the war in ukraine",
-                "who is trump",
-                "what's the difference between",
-                "who is",
-                "what is oppenheimer movie about",
-                "what is jku university",
-                "who did",
-                "is that true that",
-                "what is his name?",
-                "what is his age?",
-                "how old is he?",
-                "tell me about",
-                "should i",
-                "where is he from?",
-                "tell me a joke",
-                "is  alive",
-                "how old is",
-                "what is his name?",
-                "what is his age?"])
         self.schema = {
             'type': 'function',
             'function': {
@@ -86,7 +53,7 @@ class Tool:
                 result['wolfram alpha'] = wolfram_result
 
         def ddg_thread():
-            result['web search'] = self.ddg.run(query=query, max_results=5)
+            result['web search'] = self.ddg.run(query)
 
         # Start the threads
         wikipedia_thread = Thread(target=wiki_thread)

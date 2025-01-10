@@ -1,5 +1,4 @@
 from duckduckgo_search import DDGS
-from semantic_router import Route
 
 
 class ToolResponse:
@@ -16,18 +15,6 @@ class ToolResponse:
 
 class Tool:
     def __init__(self):
-        self.route = Route(
-            name="image_search",
-            utterances=[
-                "show me the image of",
-                "what looks like",
-                "retrieve me the picture of",
-                "search for the photo of",
-                "show me the photograph of",
-                "find me an image of",
-                "gimme the picture of"
-            ],
-        )
         self.schema = {
             'type': 'function',
             'function': {
