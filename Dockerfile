@@ -9,6 +9,7 @@ USER user
 # Set the working directory to the user's home directory
 WORKDIR /home/user/app
 
+RUN sudo apt install gcc-11
 RUN sudo apt install g++-11
 # Copy requirements first to leverage Docker cache
 COPY --chown=user requirements.txt .
