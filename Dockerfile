@@ -9,7 +9,6 @@ USER user
 # Set the working directory to the user's home directory
 WORKDIR /home/user/app
 
-RUN sudo chmod -R 775 /path/to/site-packages
 # Copy requirements first to leverage Docker cache
 COPY --chown=user requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
