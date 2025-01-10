@@ -86,7 +86,7 @@ class Tool:
                 result['wolfram alpha'] = wolfram_result
 
         def ddg_thread():
-            result['web search'] = self.ddg.run(query=query, max_results=5)
+            result['web search'] = self.ddg.run(query)
 
         # Start the threads
         wikipedia_thread = Thread(target=wiki_thread)
