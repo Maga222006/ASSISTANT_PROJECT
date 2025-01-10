@@ -100,7 +100,7 @@ class Agent:
 
                 system_message = {
                     'role': 'system',
-                    'content': (
+                    'content': 
                         f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                         f"The user is located in {os.getenv('LOCATION') or 'an unknown location'}. "
                         "You must answer the user **only** using the results from the tools. "
@@ -108,7 +108,6 @@ class Agent:
                         f"Local time: {self.current_time.run()}. "
                         f"Tool Responses: "
                         f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
-                    )
                 }
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
                 print(response)
