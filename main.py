@@ -54,6 +54,9 @@ class Agent:
                 "If so, determine and utilize the appropriate tool(s) to fulfill the request. "
                 "You may call multiple tools as needed to provide comprehensive responses. "
                 "Always choose the best approach to address the user's query effectively."
+                "Reminder:"
+                "- Function calls MUST follow the specified format, start with <function= and end with </function>"
+                "- Required parameters MUST be specified"
             )
         }
         response = self.generator.call_llm(messages=messages[-7:], toolbox=self.toolbox, system_message=system_message)
