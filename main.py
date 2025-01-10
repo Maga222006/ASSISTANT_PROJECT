@@ -17,13 +17,8 @@ class Agent:
         self.current_time = current_time.Tool()
         self.generator = Generator()
         self.uploaded_tools = self.load_tools()
-        self.schemas = [tool.schema for tool in self.uploaded_tools.values()]
-        self.routes = [tool.route for tool in self.uploaded_tools.values()]
-        self.router = HybridRouteLayer(
-            encoder=HuggingFaceEncoder(),
-            sparse_encoder=TfidfEncoder(),
-            routes=self.routes
-        )
+        self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
+
     def load_tools(self):
         """Dynamically load skill modules from the 'tools' directory."""
         skills = {}
@@ -38,15 +33,6 @@ class Agent:
                     except (ImportError, AttributeError) as e:
                         logging.error(f"Error loading skill '{module_name}': {e}")
         return skills
-
-    def toolbox(self, query):
-        routes = self.router._query(query, 6)
-        if routes:
-            routes = set([route['route'] for route in routes])
-            routes.add('web_search')
-            return [schema for schema in self.schemas if schema['function']['name'] in routes]
-        return [schema for schema in self.schemas if schema['function']['name'] == 'web_search']
-
 
     def call_agent(self, messages):
         agent_response = {
@@ -70,7 +56,8 @@ class Agent:
                 "Always choose the best approach to address the user's query effectively."
             )
         }
-        response = self.generator.call_llm(messages=messages[-8:], toolbox=self.toolbox(messages[-1]['content']), system_message=system_message)
+        response = self.generator.call_llm(messages=messages[-7:], toolbox=self.toolbox, system_message=system_message)
+        print(response)
         def execute_tool(tool_name, command):
             try:
                 arguments = json.loads(str(command))
@@ -122,6 +109,7 @@ class Agent:
                     )
                 }
                 response =  self.generator.call_llm(messages=messages, system_message=system_message)
+                print(response)
         agent_response['message'] = {'role': 'assistant', 'content': response.message.content}
         return agent_response
 
