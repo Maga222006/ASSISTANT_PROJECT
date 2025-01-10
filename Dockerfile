@@ -1,5 +1,10 @@
 FROM python:3.10-slim
 
+USER root
+RUN apt-get update && \
+    apt-get install -y build-essential gcc && \
+    rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user with UID 1000
 RUN useradd -m -u 1000 user
 
