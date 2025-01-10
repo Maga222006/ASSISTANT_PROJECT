@@ -47,17 +47,16 @@ class Agent:
         tool_responses = []
         system_message = {
             'role': 'system',
-            'content': (
-                f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
-                f"The user is located in {os.getenv('LOCATION')}. "
-                "When the user makes a request, assess whether it requires real-time data or specific actions. "
-                "If so, determine and utilize the appropriate tool(s) to fulfill the request. "
-                "You may call multiple tools as needed to provide comprehensive responses. "
-                "Always choose the best approach to address the user's query effectively."
-                "Reminder:"
-                "- Function calls MUST follow the specified format, start with <function= and end with </function>"
-                "- Required parameters MUST be specified"
-            )
+            'content': f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
+                       f"The user is located in {os.getenv('LOCATION')}. "
+                       "When the user makes a request, assess whether it requires real-time data or specific actions. "
+                       "If so, determine and utilize the appropriate tool(s) to fulfill the request. "
+                       "You may call multiple tools as needed to provide comprehensive responses. "
+                       "Always choose the best approach to address the user's query effectively."
+                       "Reminder:"
+                       "- Function calls MUST follow the specified format, start with <function= and end with </function>"
+                       "- Required parameters MUST be specified"
+            
         }
         response = self.generator.call_llm(messages=messages[-7:], toolbox=self.toolbox, system_message=system_message)
         print(response)
