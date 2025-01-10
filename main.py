@@ -55,7 +55,7 @@ class Agent:
                 "Always choose the best approach to address the user's query effectively."
             )
         }
-        response = self.generator.call_llm(messages=messages[-8:], toolbox=self.toolbox, system_message=system_message)
+        response = self.generator.call_llm(messages=messages[-5:], toolbox=self.toolbox, system_message=system_message)
         def execute_tool(tool_name, command):
             try:
                 arguments = json.loads(str(command))
