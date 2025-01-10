@@ -5,8 +5,7 @@ langchain
 openai
 transformers
 wikipedia
-llama-cpp-python[server]
-semantic-router[local]==0.0.72
+semantic-router[hybrid]
 wolframalpha
 geopy
 langchain-community
