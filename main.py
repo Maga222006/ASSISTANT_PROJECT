@@ -1,23 +1,24 @@
-from semantic_router.encoders import HuggingFaceEncoder, TfidfEncoder
-from semantic_router import HybridRouteLayer
 from fastapi import FastAPI, HTTPException
+from langchain_openai import ChatOpenAI
 from tools import current_time
 from dotenv import load_dotenv
 from typing import Dict, Any
-from model import Generator
 import json
 import importlib
 import threading
 import logging
 import os
+
 load_dotenv()
+
 
 class Agent:
     def __init__(self):
+        self.llm = ChatOpenAI(model=os.getenv('MODEL'))
         self.current_time = current_time.Tool()
-        self.generator = Generator()
         self.uploaded_tools = self.load_tools()
-        self.toolbox = [tool.schema for tool in self.uploaded_tools.values()]
+        self.tools = [tool.schema for tool in self.uploaded_tools.values()]
+        self.llm_with_tools = self.llm.bind_tools(self.tools)
 
     def load_tools(self):
         """Dynamically load skill modules from the 'tools' directory."""
@@ -49,17 +50,9 @@ class Agent:
             'role': 'system',
             'content': f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                        f"The user is located in {os.getenv('LOCATION')}. "
-                       "When the user makes a request, assess whether it requires real-time data or specific actions. "
-                       "If so, determine and utilize the appropriate tool(s) to fulfill the request. "
-                       "You may call multiple tools as needed to provide comprehensive responses. "
-                       "Always choose the best approach to address the user's query effectively."
-                       "Reminder:"
-                       "- Function calls MUST follow the specified format, start with <function= and end with </function>"
-                       "- Required parameters MUST be specified"
-            
         }
-        response = self.generator.call_llm(messages=messages[-7:], toolbox=self.toolbox, system_message=system_message)
-        print(response)
+        response = self.llm_with_tools.invoke([system_message]+messages[-10:])
+
         def execute_tool(tool_name, command):
             try:
                 arguments = json.loads(str(command))
@@ -76,14 +69,15 @@ class Agent:
                     tool_responses.append(tool_response)
 
         # Step 3: If the LLM used any tools, run them
-        if response.message.tool_calls:
-            calls = response.message.tool_calls
+        if response.tool_calls:
+
+            calls = response.tool_calls
             threads = []
             if calls:
                 for call in calls:
                     thread = threading.Thread(
                         target=execute_tool,
-                        args=(call.function.name, call.function.arguments)
+                        args=(call['name'], call['args'])
                     )
                     thread.start()
                     threads.append(thread)
@@ -100,22 +94,22 @@ class Agent:
 
                 system_message = {
                     'role': 'system',
-                    'content': 
+                    'content':
                         f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                         f"The user is located in {os.getenv('LOCATION') or 'an unknown location'}. "
                         "You must answer the user **only** using the results from the tools. "
                         "Do not invent information that the tools did not provide. "
-                        f"Local time: {self.current_time.run()}. "
                         f"Tool Responses: "
                         f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
                 }
-                response =  self.generator.call_llm(messages=messages, system_message=system_message)
-                print(response)
-        agent_response['message'] = {'role': 'assistant', 'content': response.message.content}
+                response = self.llm.invoke(messages[:-1]+[system_message, messages[-1]])
+        agent_response['message'] = {'role': 'assistant', 'content': response.content}
         return agent_response
+
 
 app = FastAPI()
 agent = False
+
 
 @app.post("/request")
 async def process_request(request_body: Dict[str, Any]):
