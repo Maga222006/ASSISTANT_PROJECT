@@ -2,7 +2,6 @@ import datetime
 import os
 from geopy import Nominatim
 from timezonefinder import TimezoneFinder
-from model import Generator
 import pytz
 
 class ToolResponse:
@@ -19,8 +18,6 @@ class ToolResponse:
 
 class Tool:
     def __init__(self):
-        self.generator = Generator()
-        self.call_llm = self.generator.call_llm
         self.tf = TimezoneFinder()
         self.geolocator = Nominatim(user_agent="my_geocoder")
         self.weekday_mapping = ("Monday", "Tuesday",

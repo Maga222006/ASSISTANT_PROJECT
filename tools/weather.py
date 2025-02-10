@@ -3,7 +3,6 @@ import requests
 import os
 import logging
 from geopy.geocoders import Nominatim
-from model import Generator
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -20,8 +19,6 @@ class ToolResponse:
 
 class Tool:
     def __init__(self):
-        self.generator = Generator()
-        self.call_llm = self.generator.call_llm
         self.geolocator = Nominatim(user_agent="my_geocoder")
         self.api_key = os.getenv('OPENWEATHERMAP_API_KEY')
 
