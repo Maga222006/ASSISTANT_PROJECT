@@ -9,6 +9,7 @@ semantic-router[local]
 wolframalpha
 geopy
 langchain-community
+langchain-openai
 timezonefinder
 geocoder
 duckduckgo_search==5.3.1b1
