@@ -58,7 +58,7 @@ class Agent:
 
         def execute_tool(tool_name, command):
             try:
-                arguments = json.loads(str(command))
+                arguments = json.loads(str(command)) if str(type(command)) != "<class 'dict'>" else command
                 if arguments:
                     tool_response = self.uploaded_tools[tool_name].run(**arguments)
                 else:
@@ -74,7 +74,6 @@ class Agent:
         # Step 3: If the LLM used any tools, run them
         if response.tool_calls:
             calls = response.tool_calls
-            print(calls)
             threads = []
             if calls:
                 for call in calls:
