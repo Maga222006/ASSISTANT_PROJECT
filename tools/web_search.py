@@ -1,5 +1,7 @@
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper, WolframAlphaAPIWrapper, WikipediaAPIWrapper
 from threading import Thread
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class ToolResponse:
