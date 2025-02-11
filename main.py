@@ -105,6 +105,7 @@ class Agent:
                         f"Tool Responses: "
                         f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
                 }
+                print(system_message)
                 response = self.llm.invoke(messages[:-1]+[system_message, messages[-1]])
         agent_response['message'] = {'role': 'assistant', 'content': response.content}
         return agent_response
