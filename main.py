@@ -50,8 +50,11 @@ class Agent:
             'role': 'system',
             'content': f"You are an AI assistant {os.getenv('ASSISTANT_NAME')}. "
                        f"The user is located in {os.getenv('LOCATION')}. "
+                       f"If the user query requires real-time, up-to-date information, use tools, like 'web_search'. "
+                       f"Use tools as often as possible. "
+                       f"Make multiple simultaneous tool calls. "
         }
-        response = self.llm_with_tools.invoke([system_message]+messages[-10:])
+        response = self.llm_with_tools.invoke([system_message]+messages[-6:])
 
         def execute_tool(tool_name, command):
             try:
@@ -70,8 +73,8 @@ class Agent:
 
         # Step 3: If the LLM used any tools, run them
         if response.tool_calls:
-
             calls = response.tool_calls
+            print(calls)
             threads = []
             if calls:
                 for call in calls:
@@ -117,8 +120,7 @@ async def process_request(request_body: Dict[str, Any]):
     try:
         # Access fields from the raw dictionary
         messages = json.loads(request_body.get("messages", ""))
-        os.environ['TOOl_CALLING_MODEL'] = request_body.get("tool_calling_model", "")
-        os.environ['RESPONDING_MODEL'] = request_body.get("responding_model", "")
+        os.environ['MODEL'] = request_body.get("model", "")
         os.environ['OPENAI_API_BASE'] = request_body.get("openai_api_base", "")
         os.environ['OPENAI_API_KEY'] = request_body.get("openai_api_key", "")
         os.environ['ASSISTANT_NAME'] = request_body.get("assistant_name", "")

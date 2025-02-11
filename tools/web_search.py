@@ -22,7 +22,7 @@ class Tool:
             'type': 'function',
             'function': {
                 'name': 'web_search',
-                'description': 'Search information about current events, famous people, etc on the internet. '
+                'description': 'Search information about current events, recent news, famous people, etc on the internet. '
                                'Do NOT search weather forecast or time with it, you have separate functions for that. ',
                 'parameters': {
                     'type': 'object',
