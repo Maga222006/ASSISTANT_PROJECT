@@ -54,7 +54,7 @@ class Agent:
                        f"Use tools as often as possible. "
                        f"Make multiple simultaneous tool calls. "
         }
-        response = self.llm_with_tools.invoke([system_message]+messages[-6:])
+        response = self.llm_with_tools.invoke(messages[-6:-1]+[system_message, messages[-1]])
 
         def execute_tool(tool_name, command):
             try:
