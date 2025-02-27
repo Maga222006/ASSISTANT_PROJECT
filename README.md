@@ -1,6 +1,3 @@
-
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
-
 # AI Assistant Project
 
 A powerful AI assistant project designed to help users with various tasks.
