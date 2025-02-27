@@ -8,6 +8,7 @@ wikipedia
 wolframalpha
 geopy
 langchain-community
+PyGithub
 langchain-openai
 timezonefinder
 geocoder

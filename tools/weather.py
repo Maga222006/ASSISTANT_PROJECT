@@ -1,10 +1,9 @@
-import datetime
-import requests
-import os
-import logging
-from geopy.geocoders import Nominatim
+from langchain_community.utilities import WolframAlphaAPIWrapper
 from dotenv import load_dotenv
+from threading import Thread
+import datetime
 load_dotenv()
+
 
 class ToolResponse:
     def __init__(self, tool, text=None, error=None, link=None, location=None, alarm=None, timer=None, stopwatch=None):
@@ -17,13 +16,19 @@ class ToolResponse:
         self.timer = timer
         self.stopwatch = stopwatch
 
+
 class Tool:
     def __init__(self):
-        self.geolocator = Nominatim(user_agent="my_geocoder")
-        self.api_key = os.getenv('OPENWEATHERMAP_API_KEY')
-
-        if not self.api_key:
-            logging.warning("OpenWeatherMap API key not found")
+        self.wolfram = WolframAlphaAPIWrapper()
+        self.weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        self.prompts = [
+            f"Today forecast for ",
+            f"Tomorrow forecast for ",
+            f"In 2 days forecast for ",
+            f"In 3 days forecast for ",
+            f"In 4 days forecast for ",
+            f"In 5 days forecast for ",
+        ]
         self.schema = {
             'type': 'function',
             'function': {
@@ -43,82 +48,35 @@ class Tool:
                 }
             }}
 
-    def _get_weather_data(self, lat: float, lon: float) -> list:
-        """Fetch weather data from OpenWeatherMap API."""
-        if not self.api_key:
-            raise ValueError("OpenWeatherMap API key not configured")
-
-        units = os.getenv("UNITS", "metric")
-        unit_symbol = {'metric': 'C', 'imperial': 'F', 'standard': 'K'}[units]
-
-        response = requests.get(
-            'https://api.openweathermap.org/data/2.5/forecast',
-            params={
-                'lat': lat,
-                'lon': lon,
-                'units': units,
-                'appid': self.api_key
-            },
-            timeout=10
-        ).json()
-
-        days = []
+    def run(self, location):
+        forecast = []
+        threads = []
         today = datetime.datetime.now()
-        weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-        for i, label in enumerate(['today', 'tomorrow'] + [f'in {i} days' for i in range(2, 6)]):
-            date = today + datetime.timedelta(days=i)
+        def retrieve_day(prompt):
+            nonlocal location
+            n = self.prompts.index(prompt)
+            date = today + datetime.timedelta(days=n)
             date_str = date.strftime('%Y-%m-%d')
+            forecast.append(f"{date_str} | {self.weekdays[date.weekday()]} | {self.wolfram.run(prompt+location)}")
 
-            # For today, get the next available forecast
-            if label == 'today':
-                forecast = next(
-                    (item for item in response['list'] if
-                     datetime.datetime.strptime(item['dt_txt'], '%Y-%m-%d %H:%M:%S') >= today),
-                    None
-                )
-            else:
-                # For other days, get the forecast around noon
-                forecast = next(
-                    (item for item in response['list'] if date_str in item['dt_txt'] and '15:00:00' in item['dt_txt']),
-                    next((item for item in response['list'] if date_str in item['dt_txt']), None)
-                )
-
-            if forecast:
-                days.append([
-                    label,
-                    date_str,
-                    weekdays[date.weekday()],
-                    forecast['weather'][0]['description'],
-                    forecast['main']['temp'],
-                    unit_symbol
-                ])
-
-        return days
-
-    def run(self, location=None):
-        """Get weather forecast for a location or current position."""
+        for prompt in self.prompts:
+            thread = Thread(
+                target=retrieve_day,
+                args=(prompt,)
+            )
+            thread.start()
+            threads.append(thread)
+        for thread in threads:
+            thread.join()
         try:
-            if location:
-                loc_data = self.geolocator.geocode(location)
-                if loc_data:
-                    coords = (loc_data.latitude, loc_data.longitude)
-            else:
-                loc_data = self.geolocator.geocode(os.getenv('LOCATION'))
-                if loc_data:
-                    coords = (loc_data.latitude, loc_data.longitude)
-                if not coords:
-                    return ToolResponse(
-                        tool='weather',
-                        error='Was not able to parse the coordinates.'
-                    )
-            forecast = self._get_weather_data(*coords)
             return ToolResponse(
-                tool='weather',
-                text=f"Location: {location if location else os.getenv('LOCATION')}; Forecast: "+'; '.join(' '.join(str(item) for item in day) for day in forecast)
+                tool="weather",
+                text=f"Location: {location}; Forecast: {'; '.join(forecast)}."
             )
         except Exception as e:
             return ToolResponse(
-                tool='weather',
-                error=f"An error occurred during the weather forecast retrieval: {e}"
+                tool="weather",
+                error=e
             )
+

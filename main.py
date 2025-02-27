@@ -126,6 +126,7 @@ async def process_request(request_body: Dict[str, Any]):
         os.environ['ASSISTANT_NAME'] = request_body.get("assistant_name", "")
         os.environ['LOCATION'] = request_body.get("location", "")
         os.environ['UNITS'] = request_body.get("units", "metric")
+        os.environ['GITHUB_TOKEN'] = request_body.get("github_token")
         if not agent:
             agent = Agent()
         response = agent.call_agent(messages)
