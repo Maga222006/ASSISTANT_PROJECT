@@ -39,6 +39,7 @@ class Tool:
                                              'By default None (searches the time for user location)',
                           },
                       },
+                      'required': ['location'],
                   }
               }}
 

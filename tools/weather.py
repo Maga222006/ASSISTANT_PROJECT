@@ -45,8 +45,10 @@ class Tool:
                                            "By default None (location will be determined automatically). ",
                         },
                     },
+                    'required': ['location'],
                 }
-            }}
+            }
+        }
 
     def run(self, location):
         forecast = []

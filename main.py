@@ -3,10 +3,11 @@ from langchain_openai import ChatOpenAI
 from tools import current_time
 from dotenv import load_dotenv
 from typing import Dict, Any
-import json
+import regex as re
 import importlib
 import threading
 import logging
+import json
 import os
 
 load_dotenv()
@@ -18,7 +19,20 @@ class Agent:
         self.current_time = current_time.Tool()
         self.uploaded_tools = self.load_tools()
         self.tools = [tool.schema for tool in self.uploaded_tools.values()]
-        self.llm_with_tools = self.llm.bind_tools(self.tools)
+        self.llm_with_tools = self.llm.bind_tools(self.tools, tool_choice="any")
+
+    def parse_tool_calls(self, content: str):
+        pattern = r'\{(?:[^{}]|(?R))*\}'
+        matches = re.findall(pattern, content)
+        json_objects = []
+        for match in matches:
+            try:
+                json_obj = json.loads(match)
+                json_objects.append(json_obj)
+            except json.JSONDecodeError as e:
+                print(f"Failed to decode JSON object: {e}")
+        return json_objects
+
 
     def load_tools(self):
         """Dynamically load skill modules from the 'tools' directory."""
@@ -71,7 +85,9 @@ class Agent:
                 if tool_response:
                     tool_responses.append(tool_response)
 
-        # Step 3: If the LLM used any tools, run them
+        if response.content:
+            response.tool_calls = self.parse_tool_calls(response.content)
+
         if response.tool_calls:
             calls = response.tool_calls
             threads = []
@@ -104,7 +120,6 @@ class Agent:
                         f"Tool Responses: "
                         f"{' '.join([f'*{tool_response.tool}: {tool_response.text if tool_response.text else tool_response.error},' for tool_response in tool_responses]) if tool_responses else 'None'}"
                 }
-                print(system_message)
                 response = self.llm.invoke(messages[:-1]+[system_message, messages[-1]])
         agent_response['message'] = {'role': 'assistant', 'content': response.content}
         return agent_response
