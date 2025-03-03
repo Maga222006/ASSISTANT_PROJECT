@@ -19,7 +19,7 @@ class Agent:
         self.current_time = current_time.Tool()
         self.uploaded_tools = self.load_tools()
         self.tools = [tool.schema for tool in self.uploaded_tools.values()]
-        self.llm_with_tools = self.llm.bind_tools(self.tools, tool_choice="any")
+        self.llm_with_tools = self.llm.bind_tools(self.tools)
 
     def parse_tool_calls(self, content: str):
         pattern = r'\{(?:[^{}]|(?R))*\}'
@@ -95,7 +95,7 @@ class Agent:
                 for call in calls:
                     thread = threading.Thread(
                         target=execute_tool,
-                        args=(call['name'], call['args'])
+                        args=(call['name'], call['args'] if 'args' in call else call['arguments'])
                     )
                     thread.start()
                     threads.append(thread)
